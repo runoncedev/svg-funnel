@@ -86,6 +86,7 @@ function App() {
                   minWidth: 0,
                 }}
                 type="number"
+                step={100}
                 value={value}
                 onChange={(e) => {
                   setValues([
