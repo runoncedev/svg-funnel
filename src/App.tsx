@@ -3,7 +3,7 @@ import { useState } from "react";
 const normalize = (value: number, values: number[]): number => {
   const min = Math.min(...values);
   const max = Math.max(...values);
-  return Math.round(10 + ((value - min) / (max - min)) * 150);
+  return Math.round(10 + ((value - min) / (max - min)) * 90);
 };
 
 const initialValues = [1000, 500, 200, 200];
@@ -76,56 +76,33 @@ function App() {
           margin: "0 auto",
           marginTop: 50,
           width: "100px",
+          // border: "1px solid red",
         }}
       >
-        <input
-          type="number"
-          value={values[0]}
-          onChange={(e) => {
-            setValues([
-              Number(e.target.value),
-              values[1],
-              values[2],
-              values[3],
-            ]);
-          }}
-        />
-        <input
-          type="number"
-          value={values[1]}
-          onChange={(e) => {
-            setValues([
-              values[0],
-              Number(e.target.value),
-              values[2],
-              values[3],
-            ]);
-          }}
-        />
-        <input
-          type="number"
-          value={values[2]}
-          onChange={(e) => {
-            setValues([
-              values[0],
-              values[1],
-              Number(e.target.value),
-              values[3],
-            ]);
-          }}
-        />
-        <input
-          type="number"
-          value={values[3]}
-          onChange={(e) => {
-            setValues([
-              values[0],
-              values[1],
-              values[2],
-              Number(e.target.value),
-            ]);
-          }}
-        />
+        {values.map((value, index) => {
+          return (
+            <div style={{ display: "flex", gap: 4 }}>
+              <input
+                style={{
+                  minWidth: 0,
+                }}
+                type="number"
+                value={value}
+                onChange={(e) => {
+                  setValues([
+                    index === 0 ? Number(e.target.value) : values[0],
+                    index === 1 ? Number(e.target.value) : values[1],
+                    index === 2 ? Number(e.target.value) : values[2],
+                    index === 3 ? Number(e.target.value) : values[3],
+                  ]);
+                }}
+              />
+              <span style={{ color: "grey" }}>
+                ({normalize(value, values)})
+              </span>
+            </div>
+          );
+        })}
         <button type="reset" onClick={() => setValues(initialValues)}>
           Reset
         </button>
