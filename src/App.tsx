@@ -106,6 +106,15 @@ function App() {
         <button type="reset" onClick={() => setValues(initialValues)}>
           Reset
         </button>
+        <button
+          onClick={() => {
+            setValues(
+              initialValues.map(() => Math.floor(Math.random() * 1000))
+            );
+          }}
+        >
+          Randomize
+        </button>
       </div>
     </>
   );
