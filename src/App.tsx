@@ -6,7 +6,7 @@ const normalize = (value: number, values: number[]): number => {
   return Math.round(10 + ((value - min) / (max - min)) * 90);
 };
 
-const initialValues = [1000, 500, 200, 200];
+const initialValues = [1000, 500, 300, 200];
 
 const height = 46;
 const curveOffset = 30;
@@ -21,7 +21,6 @@ function App() {
           display: "flex",
           flexDirection: "column",
           gap: 2,
-          cursor: "pointer",
           width: "392px",
           margin: "0 auto",
           marginTop: 50,
