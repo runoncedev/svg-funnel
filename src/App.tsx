@@ -1,102 +1,136 @@
-// const values = [300, 180, 130, 100];
-
-import { useEffect, useState } from "react";
-
-const initialValues = [
-  Math.random(),
-  Math.random(),
-  Math.random(),
-  Math.random(),
-].map((value) => value * 1);
+import { useState } from "react";
 
 const normalize = (value: number, values: number[]): number => {
   const min = Math.min(...values);
   const max = Math.max(...values);
-  return 10 + ((value - min) / (max - min)) * 150;
+  return Math.round(10 + ((value - min) / (max - min)) * 150);
 };
 
-const normalizedValues = initialValues.map((value) =>
-  normalize(value, initialValues)
-);
-
-console.log(normalizedValues);
+const initialValues = [1000, 500, 200, 200];
 
 const height = 46;
-const curveOffset = 40;
-const gap = 2;
+const curveOffset = 30;
 
 function App() {
-  const [values, setValues] = useState(normalizedValues);
-
-  console.log(values);
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      const newValues = [
-        Math.random(),
-        Math.random(),
-        Math.random(),
-        Math.random(),
-      ].map((value) => normalize(value * 1, initialValues));
-
-      setValues(newValues);
-    }, 3000);
-
-    return () => clearInterval(interval);
-  }, []);
+  const [values, setValues] = useState(initialValues);
 
   return (
-    <svg
-      width="170px"
-      height={`${
-        normalizedValues.length * height + gap * (normalizedValues.length - 1)
-      }px`}
-      xmlns="http://www.w3.org/2000/svg"
-      strokeWidth="0"
-      style={{
-        // border: "1px solid red",
-        margin: "0 auto",
-        display: "block",
-        marginTop: 50,
-      }}
-    >
-      {values.map((value, index) => {
-        const color = index % 2 === 0 ? "orange" : "pink";
+    <>
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          gap: 2,
+          cursor: "pointer",
+          width: "392px",
+          margin: "0 auto",
+          marginTop: 50,
+          background: "#F8FAFF",
+          borderRadius: 8,
+          padding: 4,
+        }}
+      >
+        {values.map((value, index) => {
+          const normalizedValue = normalize(value, values);
 
-        const startX = value;
-        const startY = height * index + gap * index;
+          const startX = normalizedValue;
+          const startY = 0;
 
-        const endX = index === values.length - 1 ? value : values[index + 1];
-        const endY = height * (index + 1) + gap * index;
+          const endX =
+            index === values.length - 1
+              ? normalizedValue
+              : normalize(values[index + 1], values);
+          const endY = height;
 
-        const firstLineCommand = `M ${startX} ${startY}`;
+          const firstLineCommand = `M ${startX} ${startY}`;
 
-        const curveCommand = `C ${startX} ${startY + curveOffset}, ${endX} ${
-          endY - curveOffset
-        }, ${endX} ${endY}`;
+          const curveCommand = `C ${startX + 0} ${
+            startY + curveOffset
+          }, ${endX} ${endY - curveOffset}, ${endX} ${endY}`;
 
-        const secondLineCommand = `L 0 ${endY} L 0 ${startY} Z`;
+          const secondLineCommand = `L 0 ${endY} L 0 ${startY} Z`;
 
-        const d = `${firstLineCommand} ${curveCommand} ${secondLineCommand}`;
+          const d = `${firstLineCommand} ${curveCommand} ${secondLineCommand}`;
 
-        return <path key={index} d={d} stroke="transparent" fill={color} />;
-      })}
-      {/* <path
-        d="M 100 0 C 100 20, 80 30, 80 50 L 0 50 L 0 0 Z"
-        stroke="pink"
-        fill="transparent"
-      /> */}
-      {/* <path
-        d="M 80 50 C 80 70, 60 70, 60 100"
-        stroke="orange"
-        fill="transparent"
-      />
-      <path
-        d="M 60 100 C 60 120, 0 120, 0 150"
-        stroke="orange"
-        fill="transparent"
-      /> */}
-    </svg>
+          return (
+            <svg
+              key={index}
+              xmlns="http://www.w3.org/2000/svg"
+              width="170px"
+              height={`${height}px`}
+              style={{
+                borderTopLeftRadius: index === 0 ? 4 : 0,
+                borderBottomLeftRadius: index === values.length - 1 ? 4 : 0,
+              }}
+            >
+              <path key={index} d={d} stroke="transparent" fill="#30C699" />
+            </svg>
+          );
+        })}
+      </div>
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          gap: 4,
+          margin: "0 auto",
+          marginTop: 50,
+          width: "100px",
+        }}
+      >
+        <input
+          type="number"
+          value={values[0]}
+          onChange={(e) => {
+            setValues([
+              Number(e.target.value),
+              values[1],
+              values[2],
+              values[3],
+            ]);
+          }}
+        />
+        <input
+          type="number"
+          value={values[1]}
+          onChange={(e) => {
+            setValues([
+              values[0],
+              Number(e.target.value),
+              values[2],
+              values[3],
+            ]);
+          }}
+        />
+        <input
+          type="number"
+          value={values[2]}
+          onChange={(e) => {
+            setValues([
+              values[0],
+              values[1],
+              Number(e.target.value),
+              values[3],
+            ]);
+          }}
+        />
+        <input
+          type="number"
+          value={values[3]}
+          onChange={(e) => {
+            setValues([
+              values[0],
+              values[1],
+              values[2],
+              Number(e.target.value),
+            ]);
+          }}
+        />
+        <button type="reset" onClick={() => setValues(initialValues)}>
+          Reset
+        </button>
+      </div>
+    </>
   );
 }
 
